@@ -39,6 +39,12 @@ namespace Nimator
         /// </summary>
         public string Reason => Details.TryGetValue(Constants.Reason, out var reason) ? reason.ToString() : "no details provided";
 
+        /// <summary>
+        /// Returns the exception that is set in the details, or null if none is set.
+        /// </summary>
+        [CanBeNull]
+        public Exception Exception => (Details.TryGetValue(Constants.Exception, out var exception) ? exception : null) as Exception;
+
         // Gets this result's reason including any "Some.Nested.Reason" that were set by Finalize()
         public IEnumerable<KeyValuePair<string, object>> AllReasons => Details.Keys
             .Where(k => Regex.IsMatch(k, @"([a-zA-Z0-9_]+\.)*Reason"))
