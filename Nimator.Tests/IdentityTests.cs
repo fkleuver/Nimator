@@ -4,7 +4,7 @@ using Nimator.Util;
 
 namespace Nimator.Tests
 {
-    public class IdentifierTests
+    public class IdentityTests
     {
         [NamedFact]
         public void Constructor_ShouldThrow_WhenNameIsNull()
