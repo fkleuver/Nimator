@@ -48,7 +48,7 @@ namespace Nimator.Couchbase.Tests.Rules
         }
 
         [NamedTheory, CouchBaseFixture]
-        public void GetResult_WhenBucketHasLessThanSpecifiedDocuments_ReturnsOkayStatus(Identity checkId, DataCollectionResult<IResult<IList<BucketConfig>>> result)
+        public void GetResult_ShouldReturnOkayStatus_WhenBucketHasLessThanSpecifiedDocuments(Identity checkId, DataCollectionResult<IResult<IList<BucketConfig>>> result)
         {
             result.Data.Value.Count.Should().Be(3);
             var maxDocuments = result.Data.Value.Max(b => b.BasicStats.ItemCount) + 1;
@@ -65,7 +65,7 @@ namespace Nimator.Couchbase.Tests.Rules
         }
 
         [NamedTheory, CouchBaseFixture]
-        public void GetResult_WhenBucketHasMoreThanSpecifiedDocuments_ReturnsWarnStatus(Identity checkId, DataCollectionResult<IResult<IList<BucketConfig>>> result)
+        public void GetResult_ShouldReturnWarnStatus_WhenBucketHasMoreThanSpecifiedDocuments(Identity checkId, DataCollectionResult<IResult<IList<BucketConfig>>> result)
         {
             result.Data.Value.Count.Should().Be(3);
             var maxDocuments = result.Data.Value.Min(b => b.BasicStats.ItemCount) - 1;

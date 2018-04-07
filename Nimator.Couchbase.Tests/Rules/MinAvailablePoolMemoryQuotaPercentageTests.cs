@@ -46,7 +46,7 @@ namespace Nimator.Couchbase.Tests.Rules
         }
 
         [NamedTheory, CouchBaseFixture]
-        public void GetResult_PoolHasMoreThanSpecifiedPercentage_ReturnsOkayStatus(Identity checkId,  DataCollectionResult<IResult<IClusterInfo>> cluster)
+        public void GetResult_ShouldReturnOkayStatus_WhenPoolHasMoreThanSpecifiedPercentage(Identity checkId,  DataCollectionResult<IResult<IClusterInfo>> cluster)
         {
             const int minPercentage = 15;
             cluster.Data.Value.Pools().StorageTotals.Ram.QuotaTotal = 1000000;
@@ -61,7 +61,7 @@ namespace Nimator.Couchbase.Tests.Rules
         }
 
         [NamedTheory, CouchBaseFixture]
-        public void GetResult_PoolHasLessThanSpecifiedPercentage_ReturnsWarnStatus(Identity checkId, DataCollectionResult<IResult<IClusterInfo>> cluster)
+        public void GetResult_ShouldReturnWarnStatus_WhenPoolHasLessThanSpecifiedPercentage(Identity checkId, DataCollectionResult<IResult<IClusterInfo>> cluster)
         {
             const int minPercentage = 15;
             cluster.Data.Value.Pools().StorageTotals.Ram.QuotaTotal = 1000000;
