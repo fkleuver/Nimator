@@ -28,6 +28,10 @@ namespace Nimator.Tests
             {
                 return new NoSpecimen();
             }
+            if (dataType.IsGenericParameter)
+            {
+                return new NoSpecimen();
+            }
             var collectorType = typeof(DataCollector<>).MakeGenericType(dataType);
             if (type == collectorType)
             {

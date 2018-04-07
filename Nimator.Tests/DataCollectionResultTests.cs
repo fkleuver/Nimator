@@ -1,32 +1,13 @@
-﻿using System;
-using FluentAssertions;
+﻿using FluentAssertions;
 
 namespace Nimator.Tests
 {
     public class DataCollectionResultTests
     {
-        [NamedTheory, DefaultFixture]
-        public void Constructor_ShouldThrow_WhenOriginIsNull(long start, long end, object data)
+        [NamedFact]
+        public void Constructor_ShouldHaveCorrectGuardClauses()
         {
-            Action act = () => new DataCollectionResult<object>(null, start, end, data);
-
-            act.Should().Throw<ArgumentNullException>();
-        }
-
-        [NamedTheory, DefaultFixture]
-        public void Constructor_ShouldThrow_WhenDataIsNull(IDataCollector origin, long start, long end)
-        {
-            Action act = () => new DataCollectionResult<object>(origin, start, end, (object)null);
-
-            act.Should().Throw<ArgumentNullException>();
-        }
-
-        [NamedTheory, DefaultFixture]
-        public void Constructor_ShouldThrow_WhenExceptionIsNull(IDataCollector origin, long start, long end)
-        {
-            Action act = () => new DataCollectionResult<object>(origin, start, end, (Exception)null);
-
-            act.Should().Throw<ArgumentNullException>();
+            typeof(DataCollectionResult<DummyData>).VerifyConstructorGuards().Should().Be(4);
         }
     }
 }

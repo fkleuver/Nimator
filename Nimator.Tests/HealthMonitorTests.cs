@@ -17,6 +17,12 @@ namespace Nimator.Tests
             HealthMonitor.Notifiers.Clear();
             HealthMonitor.Checks.Clear();
         }
+        
+        [NamedFact]
+        public void StaticMethods_ShouldHaveCorrectGuardClauses()
+        {
+            typeof(HealthMonitor).VerifyStaticMethodGuards().Should().Be(5);
+        }
 
         [NamedTheory, DefaultFixture]
         public void AddCheck_ShouldAddCheck(IHealthCheck check)

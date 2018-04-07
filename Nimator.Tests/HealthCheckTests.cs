@@ -17,11 +17,9 @@ namespace Nimator.Tests
         }
 
         [NamedFact]
-        public void Constructor_ShouldThrow_WhenNameIsNull()
+        public void Constructor_ShouldHaveCorrectGuardClauses()
         {
-            Action act = () => new HealthCheck((string)null);
-
-            act.Should().Throw<ArgumentNullException>();
+            typeof(HealthCheck).VerifyConstructorGuards().Should().Be(1);
         }
 
         [NamedFact]

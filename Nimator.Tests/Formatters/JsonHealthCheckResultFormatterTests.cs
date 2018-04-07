@@ -1,4 +1,5 @@
-﻿using Nimator.Formatters;
+﻿using FluentAssertions;
+using Nimator.Formatters;
 
 namespace Nimator.Tests.Formatters
 {
@@ -9,6 +10,13 @@ namespace Nimator.Tests.Formatters
         {
             // ReSharper disable once ObjectCreationAsStatement
             new JsonHealthCheckResultFormatter();
+        }
+
+        [NamedFact]
+        public void InstanceMethods_ShouldHaveCorrectGuardClauses()
+        {
+            var sut = new JsonHealthCheckResultFormatter();
+            typeof(JsonHealthCheckResultFormatter).VerifyInstanceMethodGuards(sut).Should().Be(1);
         }
     }
 }

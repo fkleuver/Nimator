@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections;
+using System.Diagnostics;
 
 namespace Nimator.Util
 {
     public static class Guard
     {
-        [ContractAnnotation("value: null => halt")]
+        [ContractAnnotation("value: null => halt"), DebuggerStepThrough]
         public static void AgainstNull([InvokerParameterName] string argumentName, [NotNull] object value)
         {
             if (value == null)
@@ -14,7 +15,7 @@ namespace Nimator.Util
             }
         }
 
-        [ContractAnnotation("value: null => halt")]
+        [ContractAnnotation("value: null => halt"), DebuggerStepThrough]
         public static T AgainstNull_Return<T>([InvokerParameterName] string argumentName, [NotNull] T value)
         {
             if (value == null)
@@ -24,7 +25,7 @@ namespace Nimator.Util
             return value;
         }
 
-        [ContractAnnotation("value: null => halt")]
+        [ContractAnnotation("value: null => halt"), DebuggerStepThrough]
         public static void AgainstNullAndEmpty([InvokerParameterName] string argumentName, [NotNull] string value)
         {
             if (string.IsNullOrWhiteSpace(value))
@@ -33,7 +34,7 @@ namespace Nimator.Util
             }
         }
 
-        [ContractAnnotation("value: null => halt")]
+        [ContractAnnotation("value: null => halt"), DebuggerStepThrough]
         public static string AgainstNullAndEmpty_Return([InvokerParameterName] string argumentName, [NotNull] string value)
         {
             if (string.IsNullOrWhiteSpace(value))
@@ -43,7 +44,7 @@ namespace Nimator.Util
             return value;
         }
 
-        [ContractAnnotation("value: null => halt")]
+        [ContractAnnotation("value: null => halt"), DebuggerStepThrough]
         public static void AgainstNullAndEmpty([InvokerParameterName] string argumentName, [NotNull, NoEnumeration] ICollection value)
         {
             if (value == null)
@@ -56,7 +57,7 @@ namespace Nimator.Util
             }
         }
 
-        [ContractAnnotation("value: null => halt")]
+        [ContractAnnotation("value: null => halt"), DebuggerStepThrough]
         public static T AgainstNullAndEmpty_Return<T>([InvokerParameterName] string argumentName, [NotNull, NoEnumeration] T value) where T : ICollection
         {
             if (value == null)
@@ -70,6 +71,7 @@ namespace Nimator.Util
             return value;
         }
 
+        [DebuggerStepThrough]
         public static void AgainstNegativeAndZero([InvokerParameterName] string argumentName, int value)
         {
             if (value <= 0)
@@ -77,7 +79,8 @@ namespace Nimator.Util
                 throw new ArgumentOutOfRangeException(argumentName);
             }
         }
-
+        
+        [DebuggerStepThrough]
         public static int AgainstNegativeAndZero_Return([InvokerParameterName] string argumentName, int value)
         {
             if (value <= 0)
@@ -86,7 +89,8 @@ namespace Nimator.Util
             }
             return value;
         }
-
+        
+        [DebuggerStepThrough]
         public static void AgainstNegative([InvokerParameterName] string argumentName, int value)
         {
             if (value < 0)
@@ -94,7 +98,8 @@ namespace Nimator.Util
                 throw new ArgumentOutOfRangeException(argumentName);
             }
         }
-
+        
+        [DebuggerStepThrough]
         public static int AgainstNegative_Return([InvokerParameterName] string argumentName, int value)
         {
             if (value < 0)
@@ -103,7 +108,8 @@ namespace Nimator.Util
             }
             return value;
         }
-
+        
+        [DebuggerStepThrough]
         public static void AgainstNegativeAndZero([InvokerParameterName] string argumentName, TimeSpan value)
         {
             if (value <= TimeSpan.Zero)
@@ -111,7 +117,8 @@ namespace Nimator.Util
                 throw new ArgumentOutOfRangeException(argumentName);
             }
         }
-
+        
+        [DebuggerStepThrough]
         public static TimeSpan AgainstNegativeAndZero_Return([InvokerParameterName] string argumentName, TimeSpan value)
         {
             if (value <= TimeSpan.Zero)
@@ -120,7 +127,8 @@ namespace Nimator.Util
             }
             return value;
         }
-
+        
+        [DebuggerStepThrough]
         public static void AgainstNegative([InvokerParameterName] string argumentName, TimeSpan value)
         {
             if (value < TimeSpan.Zero)
@@ -128,7 +136,8 @@ namespace Nimator.Util
                 throw new ArgumentOutOfRangeException(argumentName);
             }
         }
-
+        
+        [DebuggerStepThrough]
         public static TimeSpan AgainstNegative_Return([InvokerParameterName] string argumentName, TimeSpan value)
         {
             if (value < TimeSpan.Zero)

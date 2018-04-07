@@ -1,17 +1,22 @@
-﻿using System;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Nimator.Logging;
 
 namespace Nimator.Tests
 {
     public class HealthCheckResultTests
     {
-        [NamedFact]
-        public void Constructor_ShouldThrow_WhenIdentityIsNull()
-        {
-            Action act = () => new HealthCheckResult(null);
 
-            act.Should().Throw<ArgumentNullException>();
+        [NamedFact]
+        public void Constructor_ShouldHaveCorrectGuardClauses()
+        {
+            typeof(HealthCheckResult).VerifyConstructorGuards().Should().Be(1);
+        }
+
+        [NamedFact]
+        public void InstanceMethods_ShouldHaveCorrectGuardClauses()
+        {
+            var sut = HealthCheckResult.Create("foo");
+            typeof(HealthCheckResult).VerifyInstanceMethodGuards(sut).Should().Be(7);
         }
 
         // More of a smoke test than a unit test, but it should do the trick for now

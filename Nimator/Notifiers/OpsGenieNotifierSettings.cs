@@ -10,16 +10,19 @@ namespace Nimator.Notifiers
         /// <summary>
         /// Your API key for posting.
         /// </summary>
+        [NotNull]
         public string ApiKey { get; set; }
 
         /// <summary>
         /// The name of the team to receive new Alerts.
         /// </summary>
+        [NotNull]
         public string TeamName { get; set; }
 
         /// <summary>
         /// The name of the Heartbeat to keep alive on each cycle.
         /// </summary>
+        [NotNull]
         public string HeartbeatName { get; set; }
 
         /// <inheritDoc/>

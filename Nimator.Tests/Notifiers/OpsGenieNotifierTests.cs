@@ -1,24 +1,21 @@
-﻿using System;
-using FluentAssertions;
-using Nimator.Formatters;
+﻿using FluentAssertions;
 using Nimator.Notifiers;
 
 namespace Nimator.Tests.Notifiers
 {
     public class OpsGenieNotifierTests
     {
-        [NamedTheory, DefaultFixture]
-        public void Constructor_ShouldThrow_WhenSettingsIsNull(IHealthCheckResultFormatter formatter)
+        [NamedFact]
+        public void Constructor_ShouldHaveCorrectGuardClauses()
         {
-            Action act = () => new OpsGenieNotifier(null, formatter);
-
-            act.Should().Throw<ArgumentNullException>();
+            typeof(OpsGenieNotifier).VerifyConstructorGuards().Should().Be(1);
         }
 
         [NamedTheory, DefaultFixture]
-        public void Constructor_ShouldNotThrow_WhenFormatterIsNull(OpsGenieNotifierSettings settings)
+        public void InstanceMethods_ShouldHaveCorrectGuardClauses(OpsGenieNotifierSettings settings)
         {
-            new OpsGenieNotifier(settings, null);
+            var sut = settings.ToNotifier();
+            typeof(OpsGenieNotifier).VerifyInstanceMethodGuards(sut).Should().Be(1);
         }
     }
 }

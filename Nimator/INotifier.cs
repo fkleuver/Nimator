@@ -8,6 +8,6 @@
         /// <summary>
         /// Sends out a <see cref="HealthCheckResult"/> via this notification channel.
         /// </summary>
-        void Send(HealthCheckResult result);
+        void Send([NotNull]HealthCheckResult result);
     }
 }

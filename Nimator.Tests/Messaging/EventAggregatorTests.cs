@@ -8,6 +8,18 @@ namespace Nimator.Tests.Messaging
     public class EventAggregatorTests
     {
         private static EventAggregator Sut => EventAggregator.Instance;
+        
+        [NamedFact]
+        public void InstanceMethods_ShouldHaveCorrectGuardClauses()
+        {
+            typeof(EventAggregator).VerifyInstanceMethodGuards(Sut).Should().Be(1);
+        }
+
+        [NamedFact]
+        public void StaticMethods_ShouldHaveCorrectGuardClauses()
+        {
+            typeof(EventAggregator).VerifyStaticMethodGuards().Should().Be(0);
+        }
 
         [NamedFact]
         public void Publish_ShouldNotThrow_WhenThereAreNoSubscriptions()

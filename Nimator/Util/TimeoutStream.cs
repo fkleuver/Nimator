@@ -18,8 +18,9 @@ namespace Nimator.Util
 
         public bool TimedOut;
 
-        public TimeoutStream(Stream innerStream, TimeSpan timeout, Action<string> log = null)
+        public TimeoutStream([NotNull]Stream innerStream, TimeSpan timeout, Action<string> log = null)
         {
+            Guard.AgainstNull(nameof(innerStream), innerStream);
             _log = log ?? (msg => { });
             _innerStream = innerStream;
             _timeout = timeout;

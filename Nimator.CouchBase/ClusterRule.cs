@@ -8,7 +8,7 @@ namespace Nimator.CouchBase
     /// </summary>
     public class ClusterRule : CouchBaseRule<IClusterInfo>
     {
-        public ClusterRule(Identity checkId) : base(checkId)
+        public ClusterRule([NotNull]Identity checkId) : base(checkId)
         {
         }
 

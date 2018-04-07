@@ -6,12 +6,13 @@ using Nimator.Util;
 
 namespace Nimator.CouchBase
 {
+    /// <inheritdoc />
     /// <summary>
-    /// A marker subclass of <see cref="CouchBaseRule"/> specifically for processing <see cref="BucketConfig"/> results.
+    /// A marker subclass of <see cref="T:Nimator.CouchBase.CouchBaseRule`1" /> specifically for processing <see cref="T:Couchbase.Configuration.Server.Serialization.BucketConfig" /> results.
     /// </summary>
     public class BucketsRule : CouchBaseRule<IList<BucketConfig>>
     {
-        protected BucketsRule(Identity checkId) : base(checkId)
+        public BucketsRule([NotNull]Identity checkId) : base(checkId)
         {
         }
 
@@ -20,8 +21,10 @@ namespace Nimator.CouchBase
             return new BucketsRule(checkId);
         }
 
-        public override bool IsMatch(object value)
+        public override bool IsMatch([NotNull]object value)
         {
+            Guard.AgainstNull(nameof(value), value);
+
             if (base.IsMatch(value))
             {
                 return true;
@@ -85,10 +88,13 @@ namespace Nimator.CouchBase
         /// <param name="actionIfFalse">Optional. The action to execute if the predicate evaluates to false.</param>
         /// <returns>This <see cref="HealthCheckRule{TData}"/> instance.</returns>
         public HealthCheckRule<IResult<IList<BucketConfig>>> WhenBucket(
-            Predicate<BucketConfig> predicate,
-            Action<HealthCheckResult, BucketConfig> actionIfTrue,
-            Action<HealthCheckResult, BucketConfig> actionIfFalse = null)
+            [NotNull]Predicate<BucketConfig> predicate,
+            [NotNull]Action<HealthCheckResult, BucketConfig> actionIfTrue,
+            [CanBeNull]Action<HealthCheckResult, BucketConfig> actionIfFalse = null)
         {
+            Guard.AgainstNull(nameof(predicate), predicate);
+            Guard.AgainstNull(nameof(actionIfTrue), actionIfTrue);
+
             return ForEachDataProperty(
                 predicate: Always,
                 query: PassThrough,

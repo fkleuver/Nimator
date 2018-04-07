@@ -20,9 +20,11 @@ namespace Nimator.Notifiers
             _settings = settings;
             _formatter = formatter ?? new PlainTextFormatter();
         }
-
-        public void Send(HealthCheckResult result)
+        
+        public void Send([NotNull]HealthCheckResult result)
         {
+            Guard.AgainstNull(nameof(result), result);
+
             if (_settings.DebounceTimeInSecs > 0 && DateTime.Now < _dontAlertBefore)
             {
                 return;

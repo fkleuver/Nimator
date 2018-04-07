@@ -6,8 +6,9 @@ namespace Nimator.Util
 {
     public static class TypeExcentions
     {
-        public static string GetClosedGenericTypeName(this Type t)
+        public static string GetClosedGenericTypeName([NotNull]this Type t)
         {
+            Guard.AgainstNull(nameof(t), t);
             if (!t.IsGenericType)
             {
                 return t.Name;
@@ -30,8 +31,10 @@ namespace Nimator.Util
             return sb.ToString();
         }
 
-        public static object Cast(this Type type, object value)
+        public static object Cast([NotNull]this Type type, [NotNull]object value)
         {
+            Guard.AgainstNull(nameof(type), type);
+            Guard.AgainstNull(nameof(value), value);
             var parameterExpr = Expression.Parameter(typeof(object), "value");
             var blockExpr = Expression.Block(Expression.Convert(Expression.Convert(parameterExpr, value.GetType()), type));
 

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Couchbase;
-using Couchbase.Management;
 using Nimator.Logging;
 using Nimator.Util;
 using Result = Nimator.HealthCheckResult;
@@ -18,12 +17,14 @@ namespace Nimator.CouchBase
     public class CouchBaseRule<TData> : HealthCheckRule<IResult<TData>> where TData : class
     {
         /// <inheritdoc />
-        public override bool IsMatch(object value)
+        public override bool IsMatch([NotNull]object value)
         {
+            Guard.AgainstNull(nameof(value), value);
+
             return value is DataCollectionResult result && result.Data is IResult<TData>;
         }
 
-        public CouchBaseRule(Identity checkId) : base(checkId)
+        public CouchBaseRule([NotNull]Identity checkId) : base(checkId)
         {
             WhenResult(DataCollectorFailed, (health, data) =>
             {
@@ -60,12 +61,12 @@ namespace Nimator.CouchBase
         /// <summary>
         /// Returns true if the data was successfully retrieved from <see cref="IClusterManager"/> via <see cref="IDataCollector"/>.
         /// </summary>
-        public bool ServiceResponsive(DataCollectionResult<IResult<TData>> d) => d.Success && d.Data.Success;
+        public bool ServiceResponsive([NotNull]DataCollectionResult<IResult<TData>> d) => Guard.AgainstNull_Return(nameof(d), d).Success && d.Data.Success;
 
         /// <summary>
         /// Returns true if the <see cref="IDataCollector"/> threw no exception, but data retrieval was unsuccessful.
         /// </summary>
-        public bool ServiceUnresponsive(DataCollectionResult<IResult<TData>> d) => d.Success && !d.Data.Success;
+        public bool ServiceUnresponsive([NotNull]DataCollectionResult<IResult<TData>> d) => Guard.AgainstNull_Return(nameof(d), d).Success && !d.Data.Success;
 
         
         /// <summary>
@@ -76,10 +77,13 @@ namespace Nimator.CouchBase
         /// <param name="actionIfFalse">Optional. The action to execute if the predicate evaluates to false.</param>
         /// <returns>This <see cref="HealthCheckRule{TData}"/> instance.</returns>
         public HealthCheckRule<IResult<TData>> WhenData(
-            Predicate<TData> predicate,
-            Action<Result, TData> actionIfTrue,
-            Action<Result, TData> actionIfFalse = null)
+            [NotNull]Predicate<TData> predicate,
+            [NotNull]Action<Result, TData> actionIfTrue,
+            [CanBeNull]Action<Result, TData> actionIfFalse = null)
         {
+            Guard.AgainstNull(nameof(predicate), predicate);
+            Guard.AgainstNull(nameof(actionIfTrue), actionIfTrue);
+
             return WhenResult(
                 predicate: dataResult => ServiceResponsive(dataResult) && predicate(dataResult.Data.Value),
                 actionIfTrue: (health, data) => { actionIfTrue(health, data.Data.Value); },
@@ -94,13 +98,20 @@ namespace Nimator.CouchBase
         /// <param name="propertyRules">A rule (or optionally, sequence of rules) to apply to each individual child item.</param>
         /// <returns>This <see cref="HealthCheckRule{TData}"/> instance.</returns>
         public HealthCheckRule<IResult<TData>> ForEachDataProperty<TProperty>(
-            Func<TData, IEnumerable<TProperty>> query,
-            params Tuple<
+            [NotNull]Func<TData, IEnumerable<TProperty>> query,
+            [NotNull, NotEmpty, ItemNotNull]params Tuple<
                 Predicate<TProperty>,
                 Action<Result, TProperty>,
                 Action<Result, TProperty>
-            >[] propertyRules)
+            >[] propertyRules) where TProperty : class
         {
+            Guard.AgainstNull(nameof(query), query);
+            Guard.AgainstNullAndEmpty(nameof(propertyRules), propertyRules);
+            foreach (var propertyRule in propertyRules)
+            {
+                Guard.AgainstNull(nameof(propertyRule), propertyRule);
+            }
+
             return ForEachDataProperty(
                 predicate: Always,
                 query: query,
@@ -120,13 +131,13 @@ namespace Nimator.CouchBase
         /// <param name="propertyRules">A rule (or optionally, sequence of rules) to apply to each individual child item.</param>
         /// <returns>This <see cref="HealthCheckRule{TData}"/> instance.</returns>
         public HealthCheckRule<IResult<TData>> ForEachDataProperty<TProperty>(
-            Predicate<TData> predicate,
-            Func<TData, IEnumerable<TProperty>> query,
+            [NotNull]Predicate<TData> predicate,
+            [NotNull]Func<TData, IEnumerable<TProperty>> query,
             params Tuple<
                 Predicate<TProperty>,
                 Action<Result, TProperty>,
                 Action<Result, TProperty>
-            >[] propertyRules)
+            >[] propertyRules) where TProperty : class
         {
             return ForEachDataProperty(
                 predicate: predicate,
@@ -150,15 +161,24 @@ namespace Nimator.CouchBase
         /// <param name="propertyRules">A rule (or optionally, sequence of rules) to apply to each individual child item.</param>
         /// <returns></returns>
         public HealthCheckRule<IResult<TData>> ForEachDataProperty<TProperty>(
-            Predicate<TData> predicate,
-            Func<TData, IEnumerable<TProperty>> query,
-            Action<Result, TData> parentAction,
-            params Tuple<
+            [NotNull]Predicate<TData> predicate,
+            [NotNull]Func<TData, IEnumerable<TProperty>> query,
+            [NotNull]Action<Result, TData> parentAction,
+            [NotNull, NotEmpty, ItemNotNull]params Tuple<
                 Predicate<TProperty>,
                 Action<Result, TProperty>,
                 Action<Result, TProperty>
-            >[] propertyRules)
+            >[] propertyRules) where TProperty : class
         {
+            Guard.AgainstNull(nameof(predicate), predicate);
+            Guard.AgainstNull(nameof(query), query);
+            Guard.AgainstNull(nameof(parentAction), parentAction);
+            Guard.AgainstNullAndEmpty(nameof(propertyRules), propertyRules);
+            foreach (var propertyRule in propertyRules)
+            {
+                Guard.AgainstNull(nameof(propertyRule), propertyRule);
+            }
+
             void Action(Result result, TData data)
             {
                 foreach (var childItem in query(data))

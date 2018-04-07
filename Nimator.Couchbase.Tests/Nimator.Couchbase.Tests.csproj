@@ -96,10 +96,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClusterHealthCheckTests.cs" />
+    <Compile Include="ClusterRuleTests.cs" />
+    <Compile Include="CouchBaseRuleTests.cs" />
+    <Compile Include="ClusterManagerFactoryTests.cs" />
+    <Compile Include="Rules\MaxDiskReadsTests.cs" />
+    <Compile Include="Rules\MaxDiskUsageTests.cs" />
+    <Compile Include="_TestUtils\ClientConfigurationBuilder.cs" />
     <Compile Include="_TestUtils\CouchBaseFixture.cs" />
     <Compile Include="_TestUtils\CouchBaseFixtureAttribute.cs" />
-    <Compile Include="MinAvailablePoolMemoryQuotaPercentageTests.cs" />
-    <Compile Include="MaxTotalDocumentsInBucketTests.cs" />
+    <Compile Include="Rules\MinAvailablePoolMemoryQuotaPercentageTests.cs" />
+    <Compile Include="Rules\MaxTotalDocumentsInBucketTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="_TestUtils\BucketsBuilder.cs" />
     <Compile Include="_TestUtils\ResultsBuilder.cs" />

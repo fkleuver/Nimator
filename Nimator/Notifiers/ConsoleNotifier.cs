@@ -22,8 +22,10 @@ namespace Nimator.Notifiers
             _writeLine = writeLine ?? Console.WriteLine;
         }
 
-        public void Send(HealthCheckResult result)
+        public void Send([NotNull]HealthCheckResult result)
         {
+            Guard.AgainstNull(nameof(result), result);
+
             result.Finalize(result.CheckId, r => r.Level >= _settings.Threshold);
             if (result.Level >= _settings.Threshold)
             {

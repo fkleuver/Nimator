@@ -8,51 +8,47 @@ using Nimator.Util;
 
 namespace Nimator.CouchBase
 {
-    public sealed class ClusterManagerFactory : Lazy<IClusterManager>
+    public interface IClusterManagerFactory
     {
+        IClusterManager Create();
+    }
 
-        public ClusterManagerFactory([NotNull]string username, [NotNull]string password) : this(new ClientConfiguration(), username, password) { }
+    public sealed class ClusterManagerFactory : IClusterManagerFactory
+    {
+        private readonly Lazy<IClusterManager> _initializer;
 
-        public ClusterManagerFactory([NotNull]ClientConfiguration config, [NotNull]string username, [NotNull]string password) : this(
-            new Cluster(config), username, password)
-        {
-            Guard.AgainstNull(nameof(config), config);
-        }
+        public ClusterManagerFactory([NotNull]IAppSettings settings)
+            : this(new ClientConfiguration(), settings) { }
 
-        public ClusterManagerFactory([NotNull]ICluster cluster, [NotNull]string username, [NotNull]string password) : base(
-            () =>
-            {
-                var mgr = cluster.CreateManager(username, password);
-                return mgr;
-            }, LazyThreadSafetyMode.ExecutionAndPublication)
+        public ClusterManagerFactory([NotNull]ClientConfiguration config, [NotNull]IAppSettings appSettings)
+            : this(new Cluster(Guard.AgainstNull_Return(nameof(config), config)), appSettings) { }
+
+        public ClusterManagerFactory([NotNull]string username, [NotNull]string password)
+            : this(new ClientConfiguration(), username, password) { }
+
+        public ClusterManagerFactory([NotNull]ClientConfiguration config, [NotNull]string username, [NotNull]string password)
+            : this(new Cluster(Guard.AgainstNull_Return(nameof(config), config)), username, password) { }
+
+        public ClusterManagerFactory([NotNull]ICluster cluster, [NotNull]IAppSettings appSettings)
+            : this(cluster, Guard.AgainstNull_Return(nameof(appSettings), appSettings).CouchBaseUsername, appSettings.CouchBasePassword) { }
+
+        public ClusterManagerFactory([NotNull]ICluster cluster, [NotNull]string username, [NotNull]string password)
         {
             Guard.AgainstNull(nameof(cluster), cluster);
             Guard.AgainstNullAndEmpty(nameof(username), username);
             Guard.AgainstNullAndEmpty(nameof(password), password);
-        }
-
-        public ClusterManagerFactory([NotNull]AppSettings settings) : this(new ClientConfiguration(), settings) { }
-
-        public ClusterManagerFactory([NotNull]ClientConfiguration config, [NotNull]AppSettings settings) : this(
-            new Cluster(config), settings)
-        {
-            Guard.AgainstNull(nameof(config), config);
-        }
-
-        public ClusterManagerFactory([NotNull]ICluster cluster, [NotNull]AppSettings settings) : base(
-            () =>
-            {
-                var mgr = cluster.CreateManager(settings.CouchBaseUsername, settings.CouchBasePassword);
-                return mgr;
-            }, LazyThreadSafetyMode.ExecutionAndPublication)
-        {
-            Guard.AgainstNull(nameof(cluster), cluster);
-            Guard.AgainstNull(nameof(settings), settings);
+            
+            _initializer = new Lazy<IClusterManager>(() => cluster.CreateManager(username, password), LazyThreadSafetyMode.ExecutionAndPublication);
         }
 
         public static ClusterManagerFactory FromAppSettings(AppSettings settings)
         {
             return new ClusterManagerFactory(settings);
+        }
+
+        public IClusterManager Create()
+        {
+            return _initializer.Value;
         }
     }
 }

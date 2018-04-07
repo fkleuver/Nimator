@@ -21,9 +21,11 @@ namespace Nimator.Notifiers
             _logger = logger ?? LogProvider.GetCurrentClassLogger();
             _formatter = formatter ?? new JsonHealthCheckResultFormatter();
         }
-
-        public void Send(HealthCheckResult result)
+        
+        public void Send([NotNull]HealthCheckResult result)
         {
+            Guard.AgainstNull(nameof(result), result);
+
             if (result.Level >= _settings.Threshold)
             {
                 result.Finalize(result.CheckId, r => r.Level >= _settings.Threshold);

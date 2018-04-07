@@ -10,6 +10,6 @@
         /// </summary>
         /// <param name="result">The <see cref="HealthCheckResult"/> to transform.</param>
         /// <returns>A string representation of the provided <see cref="HealthCheckResult"/>.</returns>
-        string Format(HealthCheckResult result);
+        string Format([NotNull]HealthCheckResult result);
     }
 }

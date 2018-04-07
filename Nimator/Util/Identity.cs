@@ -12,13 +12,13 @@ namespace Nimator.Util
         /// </summary>
         public string Name { get; }
 
-        public Identity(string name)
+        public Identity([NotNull]string name)
         {
             Guard.AgainstNullAndEmpty(nameof(name), name);
             Name = name;
         }
 
-        public Identity(Type type)
+        public Identity([NotNull]Type type)
         {
             Guard.AgainstNull(nameof(type), type);
             Name = type.GetClosedGenericTypeName();

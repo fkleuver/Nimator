@@ -12,6 +12,7 @@ namespace Nimator
         /// <summary>
         /// The unique identifier for this operation.
         /// </summary>
+        [NotNull]
         Identity Id { get; }
 
         /// <summary>

@@ -76,10 +76,9 @@ namespace Nimator.Util
         /// Generates a node ID from the provided IPAddress. While not technically RFC4122 compliant, it may still be useful for scenarios
         /// where exposing the MAC address would be a security concern.
         /// </summary>
-        public static byte[] GenerateNodeBytes(IPAddress ip)
+        public static byte[] GenerateNodeBytes([NotNull]IPAddress ip)
         {
-            if (ip == null)
-                throw new ArgumentNullException(nameof(ip));
+            Guard.AgainstNull(nameof(ip), ip);
 
             var bytes = ip.GetAddressBytes();
 
@@ -95,10 +94,9 @@ namespace Nimator.Util
         /// <summary>
         /// Generates a node ID from the provided MAC Address. This is the only RFC4122 compliant node input.
         /// </summary>
-        public static byte[] GenerateNodeBytes(PhysicalAddress mac)
+        public static byte[] GenerateNodeBytes([NotNull]PhysicalAddress mac)
         {
-            if (mac == null)
-                throw new ArgumentNullException(nameof(mac));
+            Guard.AgainstNull(nameof(mac), mac);
 
             var node = mac.GetAddressBytes();
 
@@ -164,13 +162,10 @@ namespace Nimator.Util
         /// <summary>
         /// Generates a Version 1 UUID based on manually provided timestamp, clock sequence and node ID, and returns it as a Guid
         /// </summary>
-        public static Guid GenerateTimeBasedGuid(long ticksSinceUnixEpoch, byte[] clockSequence, byte[] node)
+        public static Guid GenerateTimeBasedGuid(long ticksSinceUnixEpoch, [NotNull]byte[] clockSequence, [NotNull]byte[] node)
         {
-            if (clockSequence == null)
-                throw new ArgumentNullException(nameof(clockSequence));
-
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            Guard.AgainstNull(nameof(clockSequence), clockSequence);
+            Guard.AgainstNull(nameof(node), node);
 
             if (clockSequence.Length != 2)
                 throw new ArgumentOutOfRangeException(nameof(clockSequence), "The clockSequence must be 2 bytes.");

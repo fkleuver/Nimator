@@ -8,10 +8,23 @@ using Nimator.Logging;
 using Nimator.Tests;
 using Nimator.Util;
 
-namespace Nimator.Couchbase.Tests
+namespace Nimator.Couchbase.Tests.Rules
 {
     public class MaxTotalDocumentsInBucketTests
     {
+        [NamedFact]
+        public void Constructor_ShouldHaveCorrectGuardClauses()
+        {
+            typeof(MaxTotalDocumentsInBucket).VerifyConstructorGuards(CouchBaseFixture.CreateContext()).Should().Be(1);
+        }
+
+        [NamedFact]
+        public void InstanceMethods_ShouldHaveCorrectGuardClauses()
+        {
+            var sut = new MaxTotalDocumentsInBucket(0);
+            typeof(MaxTotalDocumentsInBucket).VerifyInstanceMethodGuards(sut, CouchBaseFixture.CreateContext()).Should().Be(41);
+        }
+
         [NamedTheory, CouchBaseFixture]
         public void IsMatch_ShouldReturnFalse_WhenDataIsNotOfTypeBuckets(Identity checkId, long maxDocuments, object data)
         {

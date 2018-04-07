@@ -137,9 +137,6 @@ namespace Nimator
                 Action<Result, TProperty>
             >[] propertyRules)
         {
-            Guard.AgainstNull(nameof(query), query);
-            Guard.AgainstNull(nameof(propertyRules), propertyRules);
-
             return ForEachProperty(
                 predicate: Always,
                 query: query,
@@ -167,10 +164,6 @@ namespace Nimator
                 Action<Result, TProperty>
             >[] propertyRules)
         {
-            Guard.AgainstNull(nameof(predicate), predicate);
-            Guard.AgainstNull(nameof(query), query);
-            Guard.AgainstNull(nameof(propertyRules), propertyRules);
-
             return ForEachProperty(
                 predicate: predicate,
                 query: query,
@@ -196,7 +189,7 @@ namespace Nimator
             [NotNull]Predicate<TData> predicate,
             [NotNull]Func<TData, IEnumerable<TProperty>> query,
             [NotNull]Action<Result, TData> parentAction,
-            [NotNull]params Tuple<
+            [NotNull, NotEmpty, ItemNotNull]params Tuple<
                 Predicate<TProperty>,
                 Action<Result, TProperty>,
                 Action<Result, TProperty>
@@ -205,7 +198,11 @@ namespace Nimator
             Guard.AgainstNull(nameof(predicate), predicate);
             Guard.AgainstNull(nameof(query), query);
             Guard.AgainstNull(nameof(parentAction), parentAction);
-            Guard.AgainstNull(nameof(propertyRules), propertyRules);
+            Guard.AgainstNullAndEmpty(nameof(propertyRules), propertyRules);
+            foreach (var propertyRule in propertyRules)
+            {
+                Guard.AgainstNull(nameof(propertyRule), propertyRule);
+            }
 
             void Action(Result result, TData data)
             {

@@ -1,20 +1,24 @@
 ﻿using System;
 using FluentAssertions;
 using Nimator.Logging;
-using Nimator.Util;
 
 namespace Nimator.Tests
 {
     public class HealthCheckRuleTests
     {
         [NamedFact]
-        public void Constructor_ShouldThrow_WhenIdentityIsNull()
+        public void Constructor_ShouldHaveCorrectGuardClauses()
         {
-            Action act = () => new HealthCheckRule<object>((Identity)null);
-
-            act.Should().Throw<ArgumentNullException>();
+            typeof(HealthCheckRule<string>).VerifyConstructorGuards().Should().Be(2);
         }
-        
+
+        [NamedFact]
+        public void InstanceMethods_ShouldHaveCorrectGuardClauses()
+        {
+            var sut = new HealthCheckRule<string>("Foo");
+            typeof(HealthCheckRule<string>).VerifyInstanceMethodGuards(sut).Should().Be(23);
+        }
+
         [NamedFact]
         public void IsMatch_ShouldReturnFalse_WhenNotDataCollectionResult()
         {
@@ -45,6 +49,16 @@ namespace Nimator.Tests
             var sut = new HealthCheckRule<object>("Foo");
 
             sut.IsMatch(result).Should().BeTrue();
+        }
+
+        [NamedTheory, DefaultFixture]
+        public void GetResult_ShouldThrow_WhenGivenNonMatchingType(DataCollectionResult<object> result)
+        {
+            var sut = new HealthCheckRule<string>("Foo");
+
+            Action act = () => sut.GetResult(result);
+
+            act.Should().Throw<ArgumentException>();
         }
 
         [NamedTheory, DefaultFixture]

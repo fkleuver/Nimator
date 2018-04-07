@@ -3,19 +3,19 @@ using Nimator.Notifiers;
 
 namespace Nimator.Tests.Notifiers
 {
-    public class ConsoleNotifierTests
+    public class LibLogNotifierTests
     {
         [NamedFact]
         public void Constructor_ShouldHaveCorrectGuardClauses()
         {
-            typeof(ConsoleNotifier).VerifyConstructorGuards().Should().Be(1);
+            typeof(LibLogNotifier).VerifyConstructorGuards().Should().Be(1);
         }
 
         [NamedFact]
         public void InstanceMethods_ShouldHaveCorrectGuardClauses()
         {
-            var sut = ConsoleNotifierSettings.Create().ToNotifier();
-            typeof(ConsoleNotifier).VerifyInstanceMethodGuards(sut).Should().Be(1);
+            var sut = LibLogNotifierSettings.Create().ToNotifier();
+            typeof(LibLogNotifier).VerifyInstanceMethodGuards(sut).Should().Be(1);
         }
     }
 }

@@ -6,7 +6,7 @@ namespace Nimator.CouchBase.Rules
     public sealed class MaxDiskReads : BucketsRule
     {
         public MaxDiskReads(double maxReads) : this(new Identity(nameof(MaxDiskReads)), maxReads) { }
-        public MaxDiskReads(Identity id, double maxReads) : base(id)
+        public MaxDiskReads([NotNull]Identity id, double maxReads) : base(id)
         {
             WhenBucket(
                 predicate: bucket => bucket.BasicStats.DiskFetches > maxReads,

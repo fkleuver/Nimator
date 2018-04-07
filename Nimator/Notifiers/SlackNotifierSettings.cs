@@ -10,6 +10,7 @@ namespace Nimator.Notifiers
         /// <summary>
         /// The webhook integration url to post to.
         /// </summary>
+        [NotNull]
         public string Url { get; set; }
 
         /// <summary>

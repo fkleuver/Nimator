@@ -30,7 +30,7 @@ namespace Nimator.Messaging
         /// <summary>
         /// Publishes the event to all subscribers.
         /// </summary>
-        public void Publish<T>(T @event)
+        public void Publish<T>([CanBeNull]T @event)
         {
             Logger.Debug($"[{nameof(EventAggregator)}] Publishing event: {typeof(T).Name}");
             var subscriptions = Subscriptions.GetSubscriptions();
@@ -60,7 +60,7 @@ namespace Nimator.Messaging
         /// <summary>
         /// Registers a callback to be invoked for events of type <see cref="T"/>
         /// </summary>
-        public Guid Subscribe<T>(Action<T> callback)
+        public Guid Subscribe<T>([NotNull]Action<T> callback)
         {
             Guard.AgainstNull(nameof(callback), callback);
             return Subscriptions.Register(callback);

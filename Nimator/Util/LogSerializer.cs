@@ -1,14 +1,11 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
-using Nimator.Logging;
 
 namespace Nimator.Util
 {
     public static class LogSerializer
     {
-        private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
-
         private static readonly JsonSerializerSettings JsonSettings = new JsonSerializerSettings
         {
             ContractResolver = new CamelCasePropertyNamesContractResolver(),
@@ -23,15 +20,9 @@ namespace Nimator.Util
             JsonSettings.Converters.Add(new StringEnumConverter { CamelCaseText = true });
         }
 
-        public static string Serialize(object logObject)
+        public static string Serialize([NotNull]object logObject)
         {
             return JsonConvert.SerializeObject(logObject, JsonSettings);
-        }
-
-        public static void SerializeAndLog(string message, object logObject)
-        {
-            var json = Serialize(logObject);
-            Logger.Info($"{message}: {json}");
         }
     }
 }

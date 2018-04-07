@@ -27,8 +27,10 @@ namespace Nimator.Notifiers
             _formatter = formatter ?? new PlainTextFormatter();
         }
         
-        public void Send(HealthCheckResult result)
+        public void Send([NotNull]HealthCheckResult result)
         {
+            Guard.AgainstNull(nameof(result), result);
+
             SendHeartbeat();
             
             result.Finalize(result.CheckId, r => r.Level >= _settings.Threshold);

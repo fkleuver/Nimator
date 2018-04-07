@@ -48,6 +48,7 @@ namespace Nimator
         /// </summary>
         public static void SetTaskRunner([NotNull]Action<Func<Task>> taskRunner)
         {
+            Guard.AgainstNull(nameof(taskRunner), taskRunner);
             _taskRunner = taskRunner;
         }
 
@@ -58,6 +59,7 @@ namespace Nimator
         /// <returns>A boolean indicating whether the <see cref="IHealthCheck"/> was successfully added.</returns>
         public static bool AddCheck([NotNull]IHealthCheck check)
         {
+            Guard.AgainstNull(nameof(check), check);
             lock (_checkLock)
             {
                 return Checks.Add(check);
@@ -71,6 +73,7 @@ namespace Nimator
         /// <returns>A boolean indicating whether the <see cref="IHealthCheck"/> was successfully removed.</returns>
         public static bool RemoveCheck([NotNull]IHealthCheck check)
         {
+            Guard.AgainstNull(nameof(check), check);
             lock (_checkLock)
             {
                 return Checks.Remove(check);
@@ -84,6 +87,7 @@ namespace Nimator
         /// <returns>A boolean indicating whether the <see cref="IHealthCheck"/> was successfully added.</returns>
         public static bool AddNotifier([NotNull]INotifier notifier)
         {
+            Guard.AgainstNull(nameof(notifier), notifier);
             lock (_notifierLock)
             {
                 if (Notifiers.ContainsKey(notifier))
@@ -104,6 +108,7 @@ namespace Nimator
         /// <returns>A boolean indicating whether the <see cref="IHealthCheck"/> was successfully removed.</returns>
         public static bool RemoveNotifier([NotNull]INotifier notifier)
         {
+            Guard.AgainstNull(nameof(notifier), notifier);
             lock (_notifierLock)
             {
                 if (!Notifiers.ContainsKey(notifier))

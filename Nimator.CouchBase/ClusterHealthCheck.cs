@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Couchbase;
 using Couchbase.Configuration.Server.Serialization;
 using Couchbase.Core;
@@ -13,11 +14,14 @@ namespace Nimator.CouchBase
     /// </summary>
     public class ClusterHealthCheck : HealthCheck
     {
-        protected readonly ICollection<ClusterManagerFactory> ClusterManagerFactories = new HashSet<ClusterManagerFactory>();
+        protected readonly ICollection<IClusterManagerFactory> ClusterManagerFactories = new HashSet<IClusterManagerFactory>();
+        
+        public ClusterHealthCheck([NotNull]IEnumerable<IClusterManagerFactory> factories)
+            : this (Guard.AgainstNull_Return(nameof(factories), factories).ToArray()) { }
 
-        public ClusterHealthCheck(params ClusterManagerFactory[] factories)
+        public ClusterHealthCheck([NotNull, ItemNotNull, NotEmpty]params IClusterManagerFactory[] factories)
         {
-            Guard.AgainstNull(nameof(factories), factories);
+            Guard.AgainstNullAndEmpty(nameof(factories), factories);
             foreach (var factory in factories)
             {
                 Guard.AgainstNull(nameof(factory), factory);
@@ -25,12 +29,12 @@ namespace Nimator.CouchBase
 
                 AddDataCollector(new DataCollector<IResult<IList<BucketConfig>>>(
                     cacheDuration: TimeSpan.FromSeconds(15),
-                    taskFactory: async () => await factory.Value.ListBucketsAsync(),
+                    taskFactory: async () => await factory.Create().ListBucketsAsync(),
                     timeout: TimeSpan.FromSeconds(5)));
 
                 AddDataCollector(new DataCollector<IResult<IClusterInfo>>(
                     cacheDuration: TimeSpan.FromSeconds(15),
-                    taskFactory: async () => await factory.Value.ClusterInfoAsync(),
+                    taskFactory: async () => await factory.Create().ClusterInfoAsync(),
                     timeout: TimeSpan.FromSeconds(5)));
             }
         }

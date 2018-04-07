@@ -10,6 +10,7 @@ namespace Nimator
         /// <summary>
         /// The <see cref="IDataCollector"/> that created this instance.
         /// </summary>
+        [NotNull]
         IDataCollector Origin { get; }
 
         /// <summary>

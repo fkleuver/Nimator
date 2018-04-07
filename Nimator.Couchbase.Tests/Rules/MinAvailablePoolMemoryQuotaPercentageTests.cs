@@ -6,10 +6,23 @@ using Nimator.Logging;
 using Nimator.Tests;
 using Nimator.Util;
 
-namespace Nimator.Couchbase.Tests
+namespace Nimator.Couchbase.Tests.Rules
 {
     public class MinAvailablePoolMemoryQuotaPercentageTests
     {
+        [NamedFact]
+        public void Constructor_ShouldHaveCorrectGuardClauses()
+        {
+            typeof(MinAvailablePoolMemoryQuotaPercentage).VerifyConstructorGuards(CouchBaseFixture.CreateContext()).Should().Be(1);
+        }
+
+        [NamedFact]
+        public void InstanceMethods_ShouldHaveCorrectGuardClauses()
+        {
+            var sut = new MinAvailablePoolMemoryQuotaPercentage(0);
+            typeof(MinAvailablePoolMemoryQuotaPercentage).VerifyInstanceMethodGuards(sut, CouchBaseFixture.CreateContext()).Should().Be(39);
+        }
+
         [NamedTheory, CouchBaseFixture]
         public void IsMatch_ShouldReturnFalse_WhenDataIsNotOfTypePool(Identity checkId, int percentage, object data)
         {

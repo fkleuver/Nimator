@@ -8,13 +8,11 @@ namespace Nimator.Tests
 {
     public class DataCollectorTests
     {
-        [NamedFact]
-        public void Constructor_ShouldThrow_WhenTaskFactoryIsNull()
-        {
-            // ReSharper disable once AssignNullToNotNullAttribute
-            Action act = () => new DataCollector<DummyData>(null);
 
-            act.Should().Throw<ArgumentNullException>();
+        [NamedFact]
+        public void Constructor_ShouldHaveCorrectGuardClauses()
+        {
+            typeof(DataCollector<DummyData>).VerifyConstructorGuards().Should().Be(4);
         }
 
         [NamedTheory, DefaultFixture]

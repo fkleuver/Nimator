@@ -6,7 +6,7 @@ namespace Nimator.CouchBase.Rules
     public sealed class MaxTotalDocumentsInBucket : BucketsRule
     {
         public MaxTotalDocumentsInBucket(long maxDocCount) : this(new Identity(nameof(MaxTotalDocumentsInBucket)), maxDocCount) { }
-        public MaxTotalDocumentsInBucket(Identity id, long maxDocCount) : base(id)
+        public MaxTotalDocumentsInBucket([NotNull]Identity id, long maxDocCount) : base(id)
         {
             WhenBucket(
                 predicate: bucket => bucket.BasicStats.ItemCount > maxDocCount,

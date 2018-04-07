@@ -1,5 +1,4 @@
-﻿using System;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Nimator.Util;
 
 namespace Nimator.Tests
@@ -7,35 +6,9 @@ namespace Nimator.Tests
     public class IdentityTests
     {
         [NamedFact]
-        public void Constructor_ShouldThrow_WhenNameIsNull()
+        public void Constructor_ShouldHaveCorrectGuardClauses()
         {
-            Action act = () => new Identity((string)null);
-
-            act.Should().Throw<ArgumentNullException>();
-        }
-
-        [NamedFact]
-        public void Constructor_ShouldThrow_WhenNameIsEmpty()
-        {
-            Action act = () => new Identity("");
-
-            act.Should().Throw<ArgumentNullException>();
-        }
-
-        [NamedFact]
-        public void Constructor_ShouldThrow_WhenNameIsWhiteSpace()
-        {
-            Action act = () => new Identity(" ");
-
-            act.Should().Throw<ArgumentNullException>();
-        }
-
-        [NamedFact]
-        public void Constructor_ShouldThrow_WhenTypeIsNull()
-        {
-            Action act = () => new Identity((Type)null);
-
-            act.Should().Throw<ArgumentNullException>();
+            typeof(Identity).VerifyConstructorGuards().Should().Be(2);
         }
 
         [NamedTheory, DefaultFixture]

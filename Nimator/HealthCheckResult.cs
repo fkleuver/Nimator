@@ -108,6 +108,8 @@ namespace Nimator
 
         public HealthCheckResult AddDetail([NotNull]string name, [CanBeNull]object obj)
         {
+            Guard.AgainstNullAndEmpty(nameof(name), name);
+
             if (Details.ContainsKey(name))
             {
                 if (Details.Values.Any(v => v == obj))
@@ -132,17 +134,24 @@ namespace Nimator
         
         public HealthCheckResult AddInnerResult([NotNull]HealthCheckResult inner)
         {
+            Guard.AgainstNull(nameof(inner), inner);
+
             InnerResults.Add(inner);
             return this;
         }
 
         public HealthCheckResult AddInnerResult([NotNull]Action<HealthCheckResult> configure)
         {
+            Guard.AgainstNull(nameof(configure), configure);
+
             return AddInnerResult(CheckId, configure);
         }
 
         public HealthCheckResult AddInnerResult([NotNull]Identity checkId, [NotNull]Action<HealthCheckResult> configure)
         {
+            Guard.AgainstNull(nameof(checkId), checkId);
+            Guard.AgainstNull(nameof(configure), configure);
+
             var inner = new HealthCheckResult(checkId);
             configure(inner);
             return AddInnerResult(inner);
@@ -154,6 +163,9 @@ namespace Nimator
         /// </summary>
         public void Finalize([NotNull]Identity checkId, [NotNull]Predicate<HealthCheckResult> pushReasonIfMatch)
         {
+            Guard.AgainstNull(nameof(checkId), checkId);
+            Guard.AgainstNull(nameof(pushReasonIfMatch), pushReasonIfMatch);
+
             foreach (var inner in InnerResults)
             {
                 inner.Finalize(checkId, pushReasonIfMatch);

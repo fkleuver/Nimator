@@ -11,6 +11,13 @@ namespace Nimator.Tests.Util
     public class GuidGeneratorTests
     {
         [NamedFact]
+        public void StaticMethods_ShouldHaveCorrectGuardClauses()
+        {
+            var sut = HealthCheckResult.Create("foo");
+            typeof(HealthCheckResult).VerifyInstanceMethodGuards(sut).Should().Be(7);
+        }
+
+        [NamedFact]
         public void GenerateTimeBasedGuid_ShouldNotHaveAnyCollisions_WhenCalled1000TimesInARow()
         {
             const int count = 1000;

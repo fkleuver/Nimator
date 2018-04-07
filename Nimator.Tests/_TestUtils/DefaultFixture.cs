@@ -29,6 +29,12 @@ namespace Nimator.Tests
         {
             yield return new DataCollectorBuilder();
             yield return new DataCollectionResultsBuilder();
+            yield return new GuardClauseFailingDataBuilder();
+        }
+
+        public static ISpecimenContext CreateContext()
+        {
+            return new SpecimenContext(new DefaultFixture());
         }
     }
 }

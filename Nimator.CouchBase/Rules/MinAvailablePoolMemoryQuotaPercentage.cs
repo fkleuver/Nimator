@@ -8,7 +8,7 @@ namespace Nimator.CouchBase.Rules
     public sealed class MinAvailablePoolMemoryQuotaPercentage : ClusterRule
     {
         public MinAvailablePoolMemoryQuotaPercentage(int minPercentage) : this(new Identity(nameof(MinAvailablePoolMemoryQuotaPercentage)), minPercentage) { }
-        public MinAvailablePoolMemoryQuotaPercentage(Identity id, int minPercentage) : base(id)
+        public MinAvailablePoolMemoryQuotaPercentage([NotNull]Identity id, int minPercentage) : base(id)
         {
             int GetAvailableRamPercent(IClusterInfo cluster)
             {

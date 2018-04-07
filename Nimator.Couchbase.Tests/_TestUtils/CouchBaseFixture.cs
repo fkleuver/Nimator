@@ -14,6 +14,12 @@ namespace Nimator.Couchbase.Tests
             }
             yield return new BucketsBuilder();
             yield return new ResultsBuilder();
+            yield return new ClientConfigurationBuilder();
+        }
+
+        public new static ISpecimenContext CreateContext()
+        {
+            return new SpecimenContext(new CouchBaseFixture());
         }
     }
 }
