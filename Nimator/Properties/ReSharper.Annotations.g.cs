@@ -56,9 +56,25 @@ namespace Nimator
     /// or of the Lazy.Value property can be null.
     /// </summary>
     [AttributeUsage(
-      AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property |
-      AttributeTargets.Delegate | AttributeTargets.Field)]
+        AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property |
+        AttributeTargets.Delegate | AttributeTargets.Field)]
     public sealed class ItemCanBeNullAttribute : Attribute { }
+
+    /// <summary>
+    /// Custom attribute only used as a marker for manual inspection and automatic testing, does not behave like a contract
+    /// </summary>
+    [AttributeUsage(
+        AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property |
+        AttributeTargets.Delegate | AttributeTargets.Field)]
+    public sealed class NotEmptyAttribute : Attribute { }
+    
+    /// <summary>
+    /// Custom attribute only used as a marker for manual inspection and automatic testing, does not behave like a contract
+    /// </summary>
+    [AttributeUsage(
+        AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property |
+        AttributeTargets.Delegate | AttributeTargets.Field)]
+    public sealed class CanBeEmptyAttribute : Attribute { }
 
     /// <summary>
     /// Indicates that the marked method builds string by format pattern and (optional) arguments.
