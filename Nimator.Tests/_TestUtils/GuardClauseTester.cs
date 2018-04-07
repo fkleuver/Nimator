@@ -34,9 +34,9 @@ namespace Nimator.Tests
         public static int VerifyStaticMethodGuards(this Type type, ISpecimenContext ctx = null)
         {
             var exceptions = 0;
-            foreach (var ctor in type.GetMethods(BindingFlags.Static | BindingFlags.Public))
+            foreach (var method in type.GetMethods(BindingFlags.Static | BindingFlags.Public))
             {
-                exceptions += VerifyGuards(ctor, ctx);
+                exceptions += VerifyGuards(method, ctx);
             }
             return exceptions;
         }
@@ -50,9 +50,9 @@ namespace Nimator.Tests
         public static int VerifyInstanceMethodGuards(this Type type, object instance, ISpecimenContext ctx = null)
         {
             var exceptions = 0;
-            foreach (var ctor in type.GetMethods(BindingFlags.Instance | BindingFlags.Public))
+            foreach (var method in type.GetMethods(BindingFlags.Instance | BindingFlags.Public))
             {
-                exceptions += VerifyGuards(ctor, ctx, instance);
+                exceptions += VerifyGuards(method, ctx, instance);
             }
             return exceptions;
         }
