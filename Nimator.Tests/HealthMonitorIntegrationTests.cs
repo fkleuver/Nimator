@@ -47,7 +47,7 @@ namespace Nimator.Tests
             bag.Count.Should().Be(1);
             var result1 = bag.Single(r => r.CheckId.Name == "Check1");
 
-            result1.InnerResults.Count.Should().Be(5);
+            result1.InnerResults.Count.Should().Be(4);
             
             var result1Foo1 = result1.InnerResults.Single(r => r.Reason == "Foo1");
             var result1Bar1 = result1.InnerResults.Single(r => r.Reason == "Bar1");
