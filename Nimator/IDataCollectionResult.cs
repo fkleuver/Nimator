@@ -34,5 +34,15 @@ namespace Nimator
         /// </summary>
         [CanBeNull]
         Exception Error { get; }
+
+        /// <summary>
+        /// If false, HealthCheck will not pass this result to any more rules.
+        /// </summary>
+        bool NeedsProcessing { get; }
+
+        /// <summary>
+        /// Tell HealthCheck to stop processing this result. Will set NeedsProcessing to true.
+        /// </summary>
+        void StopProcessing();
     }
 }

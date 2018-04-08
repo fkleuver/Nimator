@@ -9,6 +9,7 @@ namespace Nimator
     /// <inheritdoc />
     public class HealthCheckRule<TData> : IHealthCheckRule where TData : class
     {
+        public bool WarnIfNotMatched { get; } = true;
         protected readonly Identity CheckId;
         
         protected readonly Dictionary<
@@ -38,22 +39,25 @@ namespace Nimator
         {
             Guard.AgainstNull(nameof(value), value);
 
-            return value is DataCollectionResult dcr1 && (dcr1.Data == null || dcr1.Data is TData);
+            return value is IDataCollectionResult dcr1 && (dcr1.Data == null || dcr1.Data is TData);
         }
 
         /// <inheritdoc />
-        public virtual Result GetResult([NotNull]object dataResult)
+        public virtual Result GetResult([NotNull]object value)
         {
-            Guard.AgainstNull(nameof(dataResult), dataResult);
+            Guard.AgainstNull(nameof(value), value);
 
-            if (!IsMatch(dataResult))
+            if (!IsMatch(value))
             {
-                throw new ArgumentException(
-                    $"{nameof(HealthCheckResult)} received a data object of the wrong type: {dataResult.GetType().Name}");
+                throw new ArgumentException($"{GetType().GetClosedGenericTypeName()} received a data object of the wrong type: {value.GetType().GetClosedGenericTypeName()}");
             }
 
-            // This is very ugly; need to make it better
-            var typedDataResult = Convert.ChangeType(dataResult, typeof(DataCollectionResult<TData>)) as DataCollectionResult<TData>;
+            var ctor = typeof(DataCollectionResult<TData>).GetConstructor(new[] {typeof(IDataCollectionResult)});
+
+            if (!(ctor?.Invoke(new[] {value}) is DataCollectionResult<TData> typedDataResult))
+            {
+                throw new InvalidOperationException($"Failed to instantiate {typeof(DataCollectionResult<TData>).GetClosedGenericTypeName()}");
+            }
             var hasMatch = false;
             var result = new Result(CheckId);
             foreach (var predicate in InnerRules.Keys)

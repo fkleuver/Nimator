@@ -100,12 +100,14 @@
     <Compile Include="Notifiers\ConsoleNotifierSettingsTests.cs" />
     <Compile Include="Notifiers\OpsGenieNotifierSettingsTests.cs" />
     <Compile Include="Notifiers\SlackNotifierSettingsTests.cs" />
+    <Compile Include="Rules\DataCollectorErrorTests.cs" />
     <Compile Include="_TestUtils\GuardClauseTester.cs" />
     <Compile Include="_TestUtils\DataCollectionResultsBuilder.cs" />
     <Compile Include="_TestUtils\DataCollectorBuilder.cs" />
     <Compile Include="_TestUtils\DefaultFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="_TestUtils\DefaultFixtureAttribute.cs" />
+    <Compile Include="_TestUtils\MockDataCollectionResult.cs" />
     <Compile Include="_TestUtils\NamedFactAttribute.cs" />
     <Compile Include="_TestUtils\NamedTheoryAttribute.cs" />
     <Compile Include="_TestUtils\GuardClauseFailingDataBuilder.cs" />

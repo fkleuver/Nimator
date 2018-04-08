@@ -68,6 +68,8 @@
     <Compile Include="Rules\MaxDiskUsage.cs" />
     <Compile Include="Rules\MaxTotalDocumentsInBucket.cs" />
     <Compile Include="Rules\MinAvailablePoolMemoryQuotaPercentage.cs" />
+    <Compile Include="Rules\ServiceUnresponsive.cs" />
+    <Compile Include="Util\TypeExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nimator\Nimator.csproj">

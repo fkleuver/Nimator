@@ -7,6 +7,11 @@
     public interface IHealthCheckRule
     {
         /// <summary>
+        /// Whether a warning event should be created if this rule is not matched against any of the collected data.
+        /// </summary>
+        bool WarnIfNotMatched { get; }
+
+        /// <summary>
         /// Determine whether provided data should be processed by this rule.
         /// </summary>
         /// <param name="value">The data to test.</param>
@@ -16,8 +21,8 @@
         /// <summary>
         /// Creates a <see cref="HealthCheckResult"/> based on the provided data.
         /// </summary>
-        /// <param name="dataResult">The data on which the <see cref="HealthCheckResult"/> is applicable.</param>
+        /// <param name="value">The data on which the <see cref="HealthCheckResult"/> is applicable.</param>
         /// <returns>A <see cref="HealthCheckResult"/> representing the outcome of this rule.</returns>
-        HealthCheckResult GetResult([NotNull]object dataResult);
+        HealthCheckResult GetResult([NotNull]object value);
     }
 }

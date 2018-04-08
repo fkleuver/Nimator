@@ -1,5 +1,7 @@
 ﻿using System;
 using AutoFixture.Kernel;
+using Nimator.Util;
+using NSubstitute;
 
 namespace Nimator.Tests
 {
@@ -10,6 +12,18 @@ namespace Nimator.Tests
             if (!(request is Type type))
             {
                 return new NoSpecimen();
+            }
+
+            if (!typeof(IDataCollectionResult).IsAssignableFrom(type))
+            {
+                return new NoSpecimen();
+            }
+
+            if (type == typeof(IDataCollectionResult) || type == typeof(MockDataCollectionResult))
+            {
+                var mock = Substitute.For<IDataCollectionResult>();
+                mock.Origin.Id.Returns(new Identity(nameof(IDataCollector)));
+                return new MockDataCollectionResult(mock);
             }
 
             if (type == typeof(DataCollectionResult))
@@ -35,7 +49,8 @@ namespace Nimator.Tests
                 var originType = typeof(DataCollector<>).MakeGenericType(dataType);
                 dynamic origin = context.Resolve(originType);
                 var data = origin.GetAsync().Result;
-                return data;
+                var result = resultType.GetConstructor(new[] { typeof(IDataCollectionResult) })?.Invoke(new[] { data });
+                return result;
             }
 
             return new NoSpecimen();

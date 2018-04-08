@@ -7,7 +7,7 @@ namespace Nimator.Tests
         [NamedFact]
         public void Constructor_ShouldHaveCorrectGuardClauses()
         {
-            typeof(DataCollectionResult<DummyData>).VerifyConstructorGuards().Should().Be(4);
+            typeof(DataCollectionResult<DummyData>).VerifyConstructorGuards().Should().Be(5);
         }
     }
 }

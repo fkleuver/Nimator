@@ -4,6 +4,7 @@ using System.Linq;
 using Couchbase;
 using Couchbase.Configuration.Server.Serialization;
 using Couchbase.Core;
+using Nimator.CouchBase.Rules;
 using Nimator.Util;
 
 namespace Nimator.CouchBase
@@ -37,6 +38,8 @@ namespace Nimator.CouchBase
                     taskFactory: async () => await factory.Create().ClusterInfoAsync(),
                     timeout: TimeSpan.FromSeconds(5)));
             }
+
+            AddRule(new ServiceUnresponsive(Id));
         }
     }
 }

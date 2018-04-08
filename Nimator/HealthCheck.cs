@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Nimator.Logging;
 using Nimator.Messaging;
+using Nimator.Rules;
 using Nimator.Util;
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -50,9 +51,11 @@ namespace Nimator
             {
                 MinimumTickIntervalSeconds = interval.Value;
             }
+
+            Rules.Add(new DataCollectorError(Id));
         }
         public HealthCheck([CanBeNull]Identity id = null, int? interval = null) : this(null, id, interval) { }
-        public HealthCheck([NotNull]string name, int? interval = null) : this(null,  new Identity(name), interval) { }
+        public HealthCheck([NotNull]string name, int? interval = null) : this(null,  new Identity(Guard.AgainstNullAndEmpty_Return(nameof(name), name)), interval) { }
 
 
         /// <inheritdoc />
@@ -109,7 +112,7 @@ namespace Nimator
                     {
                         try
                         {
-                            if (rule.IsMatch(dataResult))
+                            if (dataResult.NeedsProcessing && rule.IsMatch(dataResult))
                             {
                                 try
                                 {
@@ -127,7 +130,7 @@ namespace Nimator
                                     checkResult.AddInnerResult(inner => inner
                                         .SetStatus(Status.Unknown)
                                         .SetLevel(LogLevel.Fatal)
-                                        .SetReason($"Rule {rule.GetType().Name} threw an exception in GetResult.")
+                                        .SetReason($"Rule {rule.GetType().GetClosedGenericTypeName()} threw an exception in GetResult.")
                                         .SetException(e));
                                 }
                             }
@@ -139,13 +142,13 @@ namespace Nimator
                             checkResult.AddInnerResult(inner => inner
                                 .SetStatus(Status.Unknown)
                                 .SetLevel(LogLevel.Fatal)
-                                .SetReason($"Rule {rule.GetType().Name} threw an exception in IsMatch.")
+                                .SetReason($"Rule {rule.GetType().GetClosedGenericTypeName()} threw an exception in IsMatch.")
                                 .SetException(e));
                         }
                     }
-                    if (!currentRuleIsMatched)
+                    if (!currentRuleIsMatched && rule.WarnIfNotMatched)
                     {
-                        var message = $"Rule {rule.GetType().Name} was not matched against any of the collected data this tick.";
+                        var message = $"Rule {rule.GetType().GetClosedGenericTypeName()} was not matched against any of the collected data this tick.";
                         Logger.Warn($"[{Id.Name}] {message}");
 
                         checkResult.AddInnerResult(inner => inner

@@ -56,6 +56,7 @@
     <Compile Include="HealthCheckRule.cs" />
     <Compile Include="Notifiers\LibLogNotifierSettings.cs" />
     <Compile Include="Notifiers\LibLogNotifier.cs" />
+    <Compile Include="Rules\DataCollectorError.cs" />
     <Compile Include="Util\Identity.cs" />
     <Compile Include="HealthCheckResult.cs" />
     <Compile Include="Formatters\IHealthCheckResultFormatter.cs" />

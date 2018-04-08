@@ -32,7 +32,7 @@ namespace Nimator.Messaging
         /// </summary>
         public void Publish<T>([CanBeNull]T @event)
         {
-            Logger.Debug($"[{nameof(EventAggregator)}] Publishing event: {typeof(T).Name}");
+            Logger.Debug($"[{nameof(EventAggregator)}] Publishing event: {typeof(T).GetClosedGenericTypeName()}");
             var subscriptions = Subscriptions.GetSubscriptions();
             var msgType = typeof(T);
 
@@ -47,12 +47,11 @@ namespace Nimator.Messaging
                 }
                 try
                 {
-                    Logger.Debug($"[{nameof(EventAggregator)}] Invoking subscriber: {subscription.GetType().Name}");
                     subscription.Handle(@event);
                 }
                 catch (Exception e)
                 {
-                    Logger.ErrorException($"[{nameof(EventAggregator)}] An error occurred while invoking subscription: {subscription.GetType().Name}", e);
+                    Logger.ErrorException($"[{nameof(EventAggregator)}] An error occurred while invoking subscription with event: {typeof(T).GetClosedGenericTypeName()}", e);
                 }
             }
         }

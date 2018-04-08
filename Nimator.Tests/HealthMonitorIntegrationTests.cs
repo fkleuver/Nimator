@@ -47,7 +47,7 @@ namespace Nimator.Tests
             bag.Count.Should().Be(1);
             var result1 = bag.Single(r => r.CheckId.Name == "Check1");
 
-            result1.InnerResults.Count.Should().Be(4);
+            result1.InnerResults.Count.Should().Be(5);
             
             var result1Foo1 = result1.InnerResults.Single(r => r.Reason == "Foo1");
             var result1Bar1 = result1.InnerResults.Single(r => r.Reason == "Bar1");
@@ -87,7 +87,6 @@ namespace Nimator.Tests
             check2.AddRule(HealthCheckRule<string>.Create(new Identity("Bar2")).WhenResult(r => r.Success && r.Data == "Bar2", (health, result) => health.SetLevel(LogLevel.Info).SetStatus(Status.Okay).SetReason("Bar2")));
             check2.AddRule(HealthCheckRule<string>.Create(new Identity("Baz2")).WhenResult(r => r.Success && r.Data == "Baz2", (health, result) => health.SetLevel(LogLevel.Info).SetStatus(Status.Okay).SetReason("Baz2")));
             check2.AddRule(HealthCheckRule<string>.Create(new Identity("Qux2")).WhenResult(r => r.Success && r.Data == "Qux2", (health, result) => health.SetLevel(LogLevel.Warn).SetStatus(Status.Maintenance).SetReason("Qux2")));
-            check2.AddRule(HealthCheckRule<string>.Create(new Identity("Timeout")).WhenResult(r => !r.Success, (health, result) => health.SetLevel(LogLevel.Fatal).SetStatus(Status.Critical).SetReason(result.Error.Message).SetException(result.Error)));
             
             HealthMonitor.AddCheck(check2);
 

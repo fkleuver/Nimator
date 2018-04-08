@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Couchbase;
-using Nimator.Logging;
+using Couchbase.Management;
 using Nimator.Util;
 using Result = Nimator.HealthCheckResult;
 
@@ -21,37 +21,15 @@ namespace Nimator.CouchBase
         {
             Guard.AgainstNull(nameof(value), value);
 
-            return value is DataCollectionResult result && result.Data is IResult<TData>;
+            if (!(value is DataCollectionResult result))
+            {
+                return false;
+            }
+
+            return result.Data is IResult<TData>;
         }
 
-        public CouchBaseRule([NotNull]Identity checkId) : base(checkId)
-        {
-            WhenResult(DataCollectorFailed, (health, data) =>
-            {
-                health.SetLevel(LogLevel.Fatal);
-                if (data.Error.GetType() == typeof(TimeoutException))
-                {
-                    health
-                        .SetStatus(Status.Critical)
-                        .SetReason($"The request to collect data from \"{data.Origin.Id}\" timed out.");
-                }
-                else
-                {
-                    health
-                        .SetStatus(Status.Unknown)
-                        .SetReason($"Nimator failed while trying to collect data from \"{data.Origin.Id}\".")
-                        .SetErrorMessage(data.Error.Message)
-                        .SetException(data.Error);
-                }
-            });
-            WhenResult(ServiceUnresponsive, (health, data) =>
-            {
-                health
-                    .SetStatus(Status.Critical)
-                    .SetLevel(LogLevel.Error)
-                    .SetReason($"Service did not respond to request from \"{data.Origin.Id}\".");
-            });
-        }
+        public CouchBaseRule([NotNull]Identity checkId) : base(checkId) { }
 
         public new static CouchBaseRule<TData> Create([NotNull]Identity checkId)
         {
@@ -68,7 +46,7 @@ namespace Nimator.CouchBase
         /// </summary>
         public bool ServiceUnresponsive([NotNull]DataCollectionResult<IResult<TData>> d) => Guard.AgainstNull_Return(nameof(d), d).Success && !d.Data.Success;
 
-        
+
         /// <summary>
         /// Manipulates a <see cref="Result"/> associated with a <see cref="IResult{T}"/> if it satisfies a provided condition.
         /// </summary>
@@ -202,7 +180,7 @@ namespace Nimator.CouchBase
             }
 
             InnerRules.Add(
-                key: result => predicate(result.Data.Value), 
+                key: result => predicate(result.Data.Value),
                 value: (health, data) => Action(health, data.Data.Value));
 
             return this;
