@@ -48,15 +48,6 @@ namespace Nimator.Util
         }
 
         /// <summary>
-        /// Gets the number of ticks (100-nanosecond intervals) that have elapsed since the Unix
-        /// epoch (1970-01-01).
-        /// </summary>
-        public static long GetSystemTimePreciseAsUnixTime()
-        {
-            return GetSystemTimePrecise().MinusUnixEpoch().Ticks;
-        }
-
-        /// <summary>
         /// Gets the current date and time in 100-nanosecond precision (UTC).
         /// </summary>
         public static DateTime GetSystemTimePrecise()
