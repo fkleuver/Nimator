@@ -16,6 +16,8 @@ namespace Nimator.ConsoleHost
             HealthMonitor.AddCheck(new BucketsHealthCheck());
             HealthMonitor.AddCheck(new ClusterHealthCheck());
 
+            HealthMonitor.AddCheck(new PingHealthCheck());
+
             // Add a logging notifier which, by default, logs the results to console as json
             HealthMonitor.AddNotifier(LibLogNotifierSettings.Create().ToNotifier());
 
