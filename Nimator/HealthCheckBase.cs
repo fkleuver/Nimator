@@ -2,7 +2,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Nimator.Logging;
-using Nimator.Messaging;
 using Nimator.Util;
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -38,40 +37,36 @@ namespace Nimator
         /// Runs this <see cref="T:Nimator.HealthCheck" /> if and only if the <see cref="P:Nimator.HealthCheck.LastRun" /> is at least <see cref="P:Nimator.HealthCheck.Interval" /> ago
         /// and if it is not already running.
         /// </summary>
-        public async Task RunAsync()
+        public async Task<HealthCheckResult> RunAsync()
         {
             if (!NeedsToRun)
             {
-                return;
+                return null;
             }
             if (Interlocked.CompareExchange(ref RunningCounter, 1, 0) != 0)
             {
-                return;
+                return null;
             }
+
+            HealthCheckResult health = null;
 
             try
             {
                 Logger.Debug($"[{Id.Name}] Running HealthCheck");
-
-                HealthCheckResult result = null;
-
+                
                 try
                 {
-                    result = await GetHealthCheckResult();
+                    health = await GetHealthCheckResult();
                 }
                 catch (Exception e)
                 {
                     Logger.ErrorException(e.Message, e);
 
-                    result = HealthCheckResult.Create(Id)
+                    health = HealthCheckResult.Create(Id)
                         .SetStatus(Status.Unknown)
                         .SetLevel(LogLevel.Fatal)
                         .SetReason($"HealthCheck {GetType().Name} threw an exception in GetHealthCheckResult.")
                         .SetException(e);
-                }
-                finally
-                {
-                    EventAggregator.Instance.Publish(result);
                 }
 
                 Logger.Debug($"[{Id.Name}] HealthCheck complete");
@@ -87,6 +82,7 @@ namespace Nimator
                 Interlocked.Exchange(ref RunningCounter, 0);
             }
 
+            return health;
         }
 
         protected abstract Task<HealthCheckResult> GetHealthCheckResult();

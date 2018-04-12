@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Nimator.Messaging;
 using NSubstitute;
 
 #pragma warning disable 4014
@@ -13,7 +11,6 @@ namespace Nimator.Tests
     {
         public HealthMonitorTests()
         {
-            EventAggregator.Instance.Dispose();
             HealthMonitor.Notifiers.Clear();
             HealthMonitor.Checks.Clear();
         }
@@ -21,7 +18,7 @@ namespace Nimator.Tests
         [NamedFact]
         public void StaticMethods_ShouldHaveCorrectGuardClauses()
         {
-            typeof(HealthMonitor).VerifyStaticMethodGuards().Should().Be(5);
+            typeof(HealthMonitor).VerifyStaticMethodGuards().Should().Be(2);
         }
 
         [NamedTheory, DefaultFixture]
@@ -44,34 +41,6 @@ namespace Nimator.Tests
         }
 
         [NamedTheory, DefaultFixture]
-        public void RemoveCheck_ShouldRemoveCheck(IHealthCheck check)
-        {
-            HealthMonitor.AddCheck(check).Should().BeTrue();
-
-            HealthMonitor.Checks.Count.Should().Be(1);
-
-            HealthMonitor.RemoveCheck(check).Should().BeTrue();
-
-            HealthMonitor.Checks.Count.Should().Be(0);
-        }
-
-        [NamedTheory, DefaultFixture]
-        public void RemoveCheck_ShouldNotThrow_WhenCheckAlreadyRemoved(IHealthCheck check)
-        {
-            HealthMonitor.AddCheck(check).Should().BeTrue();
-
-            HealthMonitor.Checks.Count.Should().Be(1);
-
-            HealthMonitor.RemoveCheck(check).Should().BeTrue();
-
-            HealthMonitor.Checks.Count.Should().Be(0);
-            
-            HealthMonitor.RemoveCheck(check).Should().BeFalse();
-            HealthMonitor.RemoveCheck(check).Should().BeFalse();
-            HealthMonitor.RemoveCheck(check).Should().BeFalse();
-        }
-
-        [NamedTheory, DefaultFixture]
         public void AddNotifier_ShouldAddNotifier(INotifier notifier)
         {
             HealthMonitor.AddNotifier(notifier).Should().BeTrue();
@@ -88,34 +57,6 @@ namespace Nimator.Tests
             HealthMonitor.AddNotifier(notifier).Should().BeFalse();
 
             HealthMonitor.Notifiers.Count.Should().Be(1);
-        }
-
-        [NamedTheory, DefaultFixture]
-        public void RemoveNotifier_ShouldRemoveNotifier(INotifier notifier)
-        {
-            HealthMonitor.AddNotifier(notifier).Should().BeTrue();
-
-            HealthMonitor.Notifiers.Count.Should().Be(1);
-
-            HealthMonitor.RemoveNotifier(notifier).Should().BeTrue();
-
-            HealthMonitor.Notifiers.Count.Should().Be(0);
-        }
-
-        [NamedTheory, DefaultFixture]
-        public void RemoveNotifier_ShouldNotThrow_WhenNotifierAlreadyRemoved(INotifier notifier)
-        {
-            HealthMonitor.AddNotifier(notifier).Should().BeTrue();
-
-            HealthMonitor.Notifiers.Count.Should().Be(1);
-
-            HealthMonitor.RemoveNotifier(notifier).Should().BeTrue();
-
-            HealthMonitor.Notifiers.Count.Should().Be(0);
-            
-            HealthMonitor.RemoveNotifier(notifier).Should().BeFalse();
-            HealthMonitor.RemoveNotifier(notifier).Should().BeFalse();
-            HealthMonitor.RemoveNotifier(notifier).Should().BeFalse();
         }
 
         [NamedFact]
@@ -154,7 +95,6 @@ namespace Nimator.Tests
         
         public void Dispose()
         {
-            EventAggregator.Instance.Dispose();
             HealthMonitor.Notifiers.Clear();
             HealthMonitor.Checks.Clear();
         }

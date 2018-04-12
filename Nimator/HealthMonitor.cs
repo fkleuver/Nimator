@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Nimator.Logging;
-using Nimator.Messaging;
 using Nimator.Util;
 // ReSharper disable InconsistentNaming
 // ReSharper disable MemberCanBePrivate.Global
@@ -27,7 +26,7 @@ namespace Nimator
         private static readonly object _notifierLock = new object();
 
         public static readonly HashSet<IHealthCheck> Checks = new HashSet<IHealthCheck>();
-        public static readonly Dictionary<INotifier, Guid> Notifiers = new Dictionary<INotifier, Guid>();
+        public static readonly HashSet<INotifier> Notifiers = new HashSet<INotifier>();
 
         /// <summary>
         /// A singleton thread whose sole responsibility is to run the tick loop; the actual checks run during the tick are queued
@@ -40,17 +39,7 @@ namespace Nimator
         /// </summary>
         private static volatile bool _isStopping;
         private static long _startTime;
-        private static Action<Func<Task>> _taskRunner;
-        private static Action<Func<Task>> TaskRunner => _taskRunner ?? (_taskRunner = t => ThreadPool.QueueUserWorkItem(_ => t()));
 
-        /// <summary>
-        /// Set the task runner used to queue <see cref="IHealthCheck.RunAsync"/>.
-        /// </summary>
-        public static void SetTaskRunner([NotNull]Action<Func<Task>> taskRunner)
-        {
-            Guard.AgainstNull(nameof(taskRunner), taskRunner);
-            _taskRunner = taskRunner;
-        }
 
         /// <summary>
         /// Add an <see cref="IHealthCheck"/> to be run on each tick. There can only be one per <see cref="IHealthCheck"/>
@@ -65,20 +54,6 @@ namespace Nimator
                 return Checks.Add(check);
             }
         }
-        
-        /// <summary>
-        /// Remove the provided <see cref="IHealthCheck"/> so that it will no longer be run on each tick.
-        /// This method is idempotent and thread-safe.
-        /// </summary>
-        /// <returns>A boolean indicating whether the <see cref="IHealthCheck"/> was successfully removed.</returns>
-        public static bool RemoveCheck([NotNull]IHealthCheck check)
-        {
-            Guard.AgainstNull(nameof(check), check);
-            lock (_checkLock)
-            {
-                return Checks.Remove(check);
-            }
-        }
 
         /// <summary>
         /// Add an <see cref="INotifier"/> to be invoked with all created <see cref="HealthCheckResult"/>s on each tick.
@@ -90,35 +65,12 @@ namespace Nimator
             Guard.AgainstNull(nameof(notifier), notifier);
             lock (_notifierLock)
             {
-                if (Notifiers.ContainsKey(notifier))
+                if (Notifiers.Contains(notifier))
                 {
                     return false;
                 }
 
-                var subscriptionToken = EventAggregator.Instance.Subscribe<HealthCheckResult>(notifier.Send);
-                Notifiers.Add(notifier, subscriptionToken);
-                return true;
-            }
-        }
-        
-        /// <summary>
-        /// Remove the provided <see cref="INotifier"/> so that it will no longer be invoked on each tick.
-        /// This method is idempotent and thread-safe.
-        /// </summary>
-        /// <returns>A boolean indicating whether the <see cref="IHealthCheck"/> was successfully removed.</returns>
-        public static bool RemoveNotifier([NotNull]INotifier notifier)
-        {
-            Guard.AgainstNull(nameof(notifier), notifier);
-            lock (_notifierLock)
-            {
-                if (!Notifiers.ContainsKey(notifier))
-                {
-                    return false;
-                }
-
-                var subscriptionToken = Notifiers[notifier];
-                EventAggregator.Instance.Unsubscribe(subscriptionToken);
-                Notifiers.Remove(notifier);
+                Notifiers.Add(notifier);
                 return true;
             }
         }
@@ -224,7 +176,24 @@ namespace Nimator
 
                     Logger.Debug($"[{nameof(HealthMonitor)}] Running check {check.Id.Name}");
 
-                    TaskRunner.Invoke(() => check.RunAsync());
+                    ThreadPool.QueueUserWorkItem(_ => new Func<Task>(async () =>
+                    {
+                        try
+                        {
+                            var health = await check.RunAsync();
+                            if (health != null)
+                            {
+                                foreach (var notifier in Notifiers)
+                                {
+                                    notifier.Send(health);
+                                }
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            Logger.ErrorException(e.Message, e);
+                        }
+                    })());
                 }
             }
             catch (Exception e)

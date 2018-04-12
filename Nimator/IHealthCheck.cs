@@ -19,6 +19,6 @@ namespace Nimator
         /// <summary>
         /// Runs this task asynchronously.
         /// </summary>
-        Task RunAsync();
+        Task<HealthCheckResult> RunAsync();
     }
 }

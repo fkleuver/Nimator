@@ -82,7 +82,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Messaging\EventAggregatorTests.cs" />
     <Compile Include="Formatters\JsonHealthCheckResultFormatterTests.cs" />
     <Compile Include="Formatters\PlainTextFormatterTests.cs" />
     <Compile Include="HealthMonitorTests.cs" />
@@ -102,10 +101,7 @@
     <Compile Include="_TestUtils\NamedFactAttribute.cs" />
     <Compile Include="_TestUtils\NamedTheoryAttribute.cs" />
     <Compile Include="_TestUtils\GuardClauseFailingDataBuilder.cs" />
-    <Compile Include="_TestUtils\TestClassWithLogging.cs" />
-    <Compile Include="_TestUtils\TestOutputLogProvider.cs" />
     <Compile Include="Util\DateTimeProviderTests.cs" />
-    <Compile Include="Util\GuidGeneratorTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />

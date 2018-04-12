@@ -32,6 +32,7 @@ namespace Nimator
         /// <summary>
         /// Additional details about the result.
         /// </summary>
+        [JsonIgnore]
         public IDictionary<string, object> Details { get; }
 
         /// <summary>
@@ -42,7 +43,7 @@ namespace Nimator
         /// <summary>
         /// Returns the exception that is set in the details, or null if none is set.
         /// </summary>
-        [CanBeNull]
+        [CanBeNull, JsonIgnore]
         public Exception Exception => (Details.TryGetValue(Constants.Exception, out var exception) ? exception : null) as Exception;
 
         // Gets this result's reason including any "Some.Nested.Reason" that were set by Finalize()
