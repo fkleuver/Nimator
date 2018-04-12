@@ -84,7 +84,6 @@
     <Compile Include="Util\LogSerializer.cs" />
     <Compile Include="Util\SimpleRestUtils.cs" />
     <Compile Include="Util\StringExtensions.cs" />
-    <Compile Include="Util\TimeoutStream.cs" />
     <Compile Include="Util\TypeExtensions.cs" />
     <Compile Include="Util\WebExceptionExtensions.cs" />
   </ItemGroup>

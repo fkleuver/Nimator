@@ -70,25 +70,6 @@ namespace Nimator.Util
             }
             return value;
         }
-
-        [DebuggerStepThrough]
-        public static void AgainstNegativeAndZero([InvokerParameterName] string argumentName, int value)
-        {
-            if (value <= 0)
-            {
-                throw new ArgumentOutOfRangeException(argumentName);
-            }
-        }
-        
-        [DebuggerStepThrough]
-        public static int AgainstNegativeAndZero_Return([InvokerParameterName] string argumentName, int value)
-        {
-            if (value <= 0)
-            {
-                throw new ArgumentOutOfRangeException(argumentName);
-            }
-            return value;
-        }
         
         [DebuggerStepThrough]
         public static void AgainstNegative([InvokerParameterName] string argumentName, int value)
@@ -103,44 +84,6 @@ namespace Nimator.Util
         public static int AgainstNegative_Return([InvokerParameterName] string argumentName, int value)
         {
             if (value < 0)
-            {
-                throw new ArgumentOutOfRangeException(argumentName);
-            }
-            return value;
-        }
-        
-        [DebuggerStepThrough]
-        public static void AgainstNegativeAndZero([InvokerParameterName] string argumentName, TimeSpan value)
-        {
-            if (value <= TimeSpan.Zero)
-            {
-                throw new ArgumentOutOfRangeException(argumentName);
-            }
-        }
-        
-        [DebuggerStepThrough]
-        public static TimeSpan AgainstNegativeAndZero_Return([InvokerParameterName] string argumentName, TimeSpan value)
-        {
-            if (value <= TimeSpan.Zero)
-            {
-                throw new ArgumentOutOfRangeException(argumentName);
-            }
-            return value;
-        }
-        
-        [DebuggerStepThrough]
-        public static void AgainstNegative([InvokerParameterName] string argumentName, TimeSpan value)
-        {
-            if (value < TimeSpan.Zero)
-            {
-                throw new ArgumentOutOfRangeException(argumentName);
-            }
-        }
-        
-        [DebuggerStepThrough]
-        public static TimeSpan AgainstNegative_Return([InvokerParameterName] string argumentName, TimeSpan value)
-        {
-            if (value < TimeSpan.Zero)
             {
                 throw new ArgumentOutOfRangeException(argumentName);
             }

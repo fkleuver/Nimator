@@ -6,8 +6,6 @@ namespace Nimator.Util
 {
     public interface IAppSettings
     {
-        string ClientBaseUri { get; }
-        string ApiBaseUri { get; }
         string CouchBaseUsername { get; }
         string CouchBasePassword { get; }
     }
@@ -15,13 +13,9 @@ namespace Nimator.Util
     public class AppSettings : IAppSettings
     {
         private readonly IDictionary<string, string> _appSettings;
-        private string _clientBaseUri;
-        private string _apiBaseUri;
         private string _couchBaseUsername;
         private string _couchBasePassword;
 
-        public string ClientBaseUri => _clientBaseUri ?? (_clientBaseUri = _appSettings["client-base-uri"]);
-        public string ApiBaseUri => _apiBaseUri ?? (_apiBaseUri = _appSettings["api-base-uri"]);
         public string CouchBaseUsername => _couchBaseUsername ?? (_couchBaseUsername = _appSettings["couchbase-username"]);
         public string CouchBasePassword => _couchBasePassword ?? (_couchBasePassword = _appSettings["couchbase-password"]);
 
