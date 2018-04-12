@@ -216,11 +216,6 @@ namespace Nimator
                 }
                 foreach (var check in Checks)
                 {
-                    if (check.IsRunning)
-                    {
-                        Logger.Debug($"[{nameof(HealthMonitor)}] Check {check.Id.Name} is already running");
-                        continue;
-                    }
                     if (!check.NeedsToRun)
                     {
                         Logger.Debug($"[{nameof(HealthMonitor)}] Check {check.Id.Name} does not need to run");

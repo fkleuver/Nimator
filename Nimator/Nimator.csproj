@@ -46,21 +46,14 @@
   <ItemGroup>
     <Compile Include="App_Packages\LibLog.4.2\LibLog.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="DataCollectionResult.cs" />
-    <Compile Include="DataCollector.cs" />
     <Compile Include="Formatters\PlainTextFormatter.cs" />
-    <Compile Include="IDataCollectionResult.cs" />
-    <Compile Include="IDataCollector.cs" />
     <Compile Include="Messaging\EventAggregator.cs" />
-    <Compile Include="HealthCheck.cs" />
-    <Compile Include="HealthCheckRule.cs" />
+    <Compile Include="HealthCheckBase.cs" />
     <Compile Include="Notifiers\LibLogNotifierSettings.cs" />
     <Compile Include="Notifiers\LibLogNotifier.cs" />
-    <Compile Include="Rules\DataCollectorError.cs" />
     <Compile Include="Util\Identity.cs" />
     <Compile Include="HealthCheckResult.cs" />
     <Compile Include="Formatters\IHealthCheckResultFormatter.cs" />
-    <Compile Include="IHealthCheckRule.cs" />
     <Compile Include="INotifier.cs" />
     <Compile Include="Notifiers\ConsoleNotifier.cs" />
     <Compile Include="Notifiers\OpsGenieAlertCreateRequest.cs" />
@@ -76,7 +69,6 @@
     <Compile Include="Notifiers\SlackNotifierSettings.cs" />
     <Compile Include="HealthMonitor.cs" />
     <Compile Include="IHealthCheck.cs" />
-    <Compile Include="ITrackableOperation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Messaging\Subscription.cs" />
     <Compile Include="Messaging\Subscriptions.cs" />

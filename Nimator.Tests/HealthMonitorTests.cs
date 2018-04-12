@@ -125,9 +125,8 @@ namespace Nimator.Tests
         }
 
         [NamedTheory, DefaultFixture]
-        public async void Tick_ShouldCallHealthCheck_WhenItNeedsToRun_AndIsNotRunning(IHealthCheck check)
+        public async void Tick_ShouldCallHealthCheck_WhenItNeedsToRun(IHealthCheck check)
         {
-            check.IsRunning.Returns(false);
             check.NeedsToRun.Returns(true);
             HealthMonitor.AddCheck(check).Should().BeTrue();
 
@@ -140,9 +139,8 @@ namespace Nimator.Tests
         }
 
         [NamedTheory, DefaultFixture]
-        public async void Tick_ShouldNotCallHealthCheck_WhenItDoesNotNeedToRun_AndIsNotRunning(IHealthCheck check)
+        public async void Tick_ShouldNotCallHealthCheck_WhenItDoesNotNeedToRun(IHealthCheck check)
         {
-            check.IsRunning.Returns(false);
             check.NeedsToRun.Returns(false);
             HealthMonitor.AddCheck(check).Should().BeTrue();
 
@@ -153,110 +151,7 @@ namespace Nimator.Tests
 
             check.DidNotReceive().RunAsync();
         }
-
-        [NamedTheory, DefaultFixture]
-        public async void Tick_ShouldNotCallHealthCheck_WhenItDoesNotNeedToRun_AndIsRunning(IHealthCheck check)
-        {
-            check.IsRunning.Returns(true);
-            check.NeedsToRun.Returns(false);
-            HealthMonitor.AddCheck(check).Should().BeTrue();
-
-            HealthMonitor.Tick();
-
-            // wait for the queue to run
-            await Task.Delay(5);
-
-            check.DidNotReceive().RunAsync();
-        }
-
-        [NamedTheory, DefaultFixture]
-        public async void Tick_ShouldNotCallHealthCheck_WhenItNeedsToRun_AndIsRunning(IHealthCheck check)
-        {
-            check.IsRunning.Returns(true);
-            check.NeedsToRun.Returns(true);
-            HealthMonitor.AddCheck(check).Should().BeTrue();
-
-            HealthMonitor.Tick();
-
-            // wait for the queue to run
-            await Task.Delay(5);
-
-            check.DidNotReceive().RunAsync();
-        }
-
         
-        #region Threading related tests
-        
-        /// <summary>
-        /// This is more of an integration test rather than a unit test, but that's kind of the point since the thread-safety
-        /// of the system is dependant on different components doing their part of the checking.
-        /// </summary>
-        /// <param name="check"></param>
-        [NamedTheory, DefaultFixture]
-        public async void Tick_ShouldOnlyCallHealthCheckOnce_WhenCalledFrom20ParallelThreads(HealthCheck check)
-        {
-            var collector = Substitute.For<IDataCollector>();
-            collector.IsRunning.Returns(false);
-            collector.NeedsToRun.Returns(true);
-            collector.When(x => x.GetAsync()).Do(x => Task.FromResult((object)null));
-            check.AddDataCollector(collector);
-            HealthMonitor.AddCheck(check).Should().BeTrue();
-            
-            const int count = 20;
-            var threads = new Thread[count];
-            for (var i = 0; i < count; i++)
-            {
-                threads[i] = new Thread(HealthMonitor.Tick);
-            }
-            for (var i = 0; i < count; i++)
-            {
-                threads[i].Start();
-            }
-            for (var i = 0; i < count; i++)
-            {
-                threads[i].Join();
-            }
-
-            // wait for the queue to run
-            await Task.Delay(10);
-
-            collector.Received(1).GetAsync();
-        }
-        
-        /// <summary>
-        /// This is not really a test in itself, but rather meant to rule out false positives for the above test
-        /// </summary>
-        /// <param name="check"></param>
-        [NamedTheory, DefaultFixture]
-        public async void Tick_ShouldCallHealthCheckEachTime_WhenCalledFrom20ParallelThreads_AndHasNoDataCollector(IHealthCheck check)
-        {
-            check.NeedsToRun.Returns(true);
-            check.IsRunning.Returns(false);
-            HealthMonitor.AddCheck(check).Should().BeTrue();
-            
-            const int count = 20;
-            var threads = new Thread[count];
-            for (var i = 0; i < count; i++)
-            {
-                threads[i] = new Thread(HealthMonitor.Tick);
-            }
-            for (var i = 0; i < count; i++)
-            {
-                threads[i].Start();
-            }
-            for (var i = 0; i < count; i++)
-            {
-                threads[i].Join();
-            }
-
-            // wait for the queue to run
-            await Task.Delay(10);
-
-            check.Received(20).RunAsync();
-        }
-        
-          #endregion
-
         public void Dispose()
         {
             EventAggregator.Instance.Dispose();

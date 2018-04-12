@@ -58,18 +58,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClusterHealthCheck.cs" />
-    <Compile Include="BucketsRule.cs" />
+    <Compile Include="BucketsHealthCheckBase.cs" />
+    <Compile Include="ClusterHealthCheckBase.cs" />
     <Compile Include="ClusterManagerFactory.cs" />
-    <Compile Include="ClusterRule.cs" />
-    <Compile Include="CouchBaseRule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Rules\MaxDiskReads.cs" />
-    <Compile Include="Rules\MaxDiskUsage.cs" />
-    <Compile Include="Rules\MaxTotalDocumentsInBucket.cs" />
-    <Compile Include="Rules\MinAvailablePoolMemoryQuotaPercentage.cs" />
-    <Compile Include="Rules\ServiceUnresponsive.cs" />
-    <Compile Include="Util\TypeExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nimator\Nimator.csproj">

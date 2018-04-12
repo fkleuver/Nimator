@@ -27,8 +27,6 @@ namespace Nimator.Tests
 
         protected virtual IEnumerable<ISpecimenBuilder> GetBuilders()
         {
-            yield return new DataCollectorBuilder();
-            yield return new DataCollectionResultsBuilder();
             yield return new GuardClauseFailingDataBuilder();
         }
 
